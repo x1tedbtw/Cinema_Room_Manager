@@ -30,46 +30,12 @@ public class Cinema {
         System.out.println("Enter the number of seats in each row:");
         allSeats = scan.nextInt();
 
-        System.out.println("Cinema:");
-        for (int i = 0; i <= allSeats; i++){
-            if (i == 0) {
-                System.out.print("  ");
-            } else {
-                System.out.print(i + " ");
-            }
-        }
-        System.out.println();
-        for (int i = 1; i <= allRows; i++){
-            for (int j = 0; j <= allSeats; j++){
-                if (j == 0){
-                    System.out.print(i + " ");
-                }
-                else {
-                    System.out.print("S ");
-                }
+        displaySeats(false);
 
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
-
-    public boolean checkForLargeRoom() {
-        if ((allRows * allSeats) < 60) {
-            setLargeRoom(false);
-        } else {
-            setLargeRoom(true);
-        }
-        return largeRoom;
     }
 
     public int calculateProfit() {
         int totalIncome = 0;
-//        Scanner scan = new Scanner(in);
-//        System.out.println("Enter the number of rows:");
-//        allRows = scan.nextInt();
-//        System.out.println("Enter the number of seats in each row:");
-//        allSeats = scan.nextInt();
 
         if ((allRows * allSeats) < 60) {
             totalIncome = (allRows * allSeats) * 10;
@@ -84,37 +50,45 @@ public class Cinema {
     }
 
     public int setTicketPrice() {
-        int ticketPrice = 0;
+        askForSeatInput();
+        int ticketPrice = calculateTicketPrice(row);
+        System.out.println("\nTicket price: $" + ticketPrice + "\n");
+        return ticketPrice;
+    }
+
+    public void printReservedSeats() {
+        displaySeats(true);
+    }
+
+    public boolean checkForLargeRoom() {
+        if ((allRows * allSeats) < 60) {
+            setLargeRoom(false);
+        } else {
+            setLargeRoom(true);
+        }
+        return largeRoom;
+    }
+
+    public void askForSeatInput() {
         Scanner scan = new Scanner(in);
         System.out.println("Enter a row number: ");
         row = scan.nextInt();
         System.out.println("Enter a seat number in that row: ");
         seat = scan.nextInt();
-
-        checkForLargeRoom();
-
-        if (largeRoom) {
-            int halfRows = allRows / 2;
-            if (row <= halfRows) {
-                ticketPrice = 10;
-            } else {
-                ticketPrice = 8;
-            }
-        }
-        else {
-            ticketPrice = 10;
-        }
-        System.out.println();
-        System.out.print("Ticket price: $" + ticketPrice + "\n");
-        System.out.println();
-
-        return ticketPrice;
     }
 
-    public void printReservedSeats() {
+    public int calculateTicketPrice(int selectedRow) {
+        checkForLargeRoom();
+        if (largeRoom) {
+            int halfRows = allRows / 2;
+            return (selectedRow <= halfRows) ? 10 : 8;
+        }
+        return 10;
+    }
+
+    public void displaySeats(boolean showReserved) {
         System.out.println("Cinema:");
-        for (int i = 0; i <= allSeats; i++){ // allSeats because if I put allRows it gonna show me
-                                                // numeration of seats without seats below
+        for (int i = 0; i <= allSeats; i++) {
             if (i == 0) {
                 System.out.print("  ");
             } else {
@@ -122,21 +96,20 @@ public class Cinema {
             }
         }
         System.out.println();
-        for (int i = 1; i <= allRows; i++){
-            for (int j = 0; j <= allSeats; j++){
-                if (j == 0){
+
+        for (int i = 1; i <= allRows; i++) {
+            for (int j = 0; j <= allSeats; j++) {
+                if (j == 0) {
                     System.out.print(i + " ");
-                } else if (i == row && j == seat) {
+                } else if (showReserved && i == row && j == seat) {
                     System.out.print("B ");
-                }
-                else {
+                } else {
                     System.out.print("S ");
                 }
-
             }
             System.out.println();
         }
-
+        System.out.println();
     }
 
 
