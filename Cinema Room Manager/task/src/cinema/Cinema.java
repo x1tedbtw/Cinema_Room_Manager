@@ -24,8 +24,14 @@ public class Cinema {
     }
 
     public void printSeats() {
+        Scanner scan = new Scanner(in);
+        System.out.println("Enter the number of rows:");
+        allRows = scan.nextInt();
+        System.out.println("Enter the number of seats in each row:");
+        allSeats = scan.nextInt();
+
         System.out.println("Cinema:");
-        for (int i = 0; i < 9; i++){
+        for (int i = 0; i <= allSeats; i++){
             if (i == 0) {
                 System.out.print("  ");
             } else {
@@ -33,26 +39,37 @@ public class Cinema {
             }
         }
         System.out.println();
-        for (int row = 1; row <=7; row++){
-            for (int seat = 0; seat <= 8; seat++){
-                if (seat == 0){
-                    System.out.print(row + " ");
-                } else {
+        for (int i = 1; i <= allRows; i++){
+            for (int j = 0; j <= allSeats; j++){
+                if (j == 0){
+                    System.out.print(i + " ");
+                }
+                else {
                     System.out.print("S ");
                 }
 
             }
             System.out.println();
         }
+        System.out.println();
+    }
+
+    public boolean checkForLargeRoom() {
+        if ((allRows * allSeats) < 60) {
+            setLargeRoom(false);
+        } else {
+            setLargeRoom(true);
+        }
+        return largeRoom;
     }
 
     public int calculateProfit() {
         int totalIncome = 0;
-        Scanner scan = new Scanner(in);
-        System.out.println("Enter the number of rows:");
-        allRows = scan.nextInt();
-        System.out.println("Enter the number of seats in each row:");
-        allSeats = scan.nextInt();
+//        Scanner scan = new Scanner(in);
+//        System.out.println("Enter the number of rows:");
+//        allRows = scan.nextInt();
+//        System.out.println("Enter the number of seats in each row:");
+//        allSeats = scan.nextInt();
 
         if ((allRows * allSeats) < 60) {
             totalIncome = (allRows * allSeats) * 10;
@@ -69,13 +86,15 @@ public class Cinema {
     public int setTicketPrice() {
         int ticketPrice = 0;
         Scanner scan = new Scanner(in);
-        System.out.println("Enter the row number: ");
+        System.out.println("Enter a row number: ");
         row = scan.nextInt();
         System.out.println("Enter a seat number in that row: ");
         seat = scan.nextInt();
 
+        checkForLargeRoom();
+
         if (largeRoom) {
-            int halfRows = (int) Math.ceil(getAllRows() / 2.0);
+            int halfRows = allRows / 2;
             if (row <= halfRows) {
                 ticketPrice = 10;
             } else {
@@ -85,15 +104,38 @@ public class Cinema {
         else {
             ticketPrice = 10;
         }
-
-        System.out.print("Ticket price: $" + ticketPrice);
+        System.out.println();
+        System.out.print("Ticket price: $" + ticketPrice + "\n");
+        System.out.println();
 
         return ticketPrice;
     }
 
     public void printReservedSeats() {
-        // Create a list to "visualize" cinema
-        // Change the S to B where needed in the list
+        System.out.println("Cinema:");
+        for (int i = 0; i <= allSeats; i++){ // allSeats because if I put allRows it gonna show me
+                                                // numeration of seats without seats below
+            if (i == 0) {
+                System.out.print("  ");
+            } else {
+                System.out.print(i + " ");
+            }
+        }
+        System.out.println();
+        for (int i = 1; i <= allRows; i++){
+            for (int j = 0; j <= allSeats; j++){
+                if (j == 0){
+                    System.out.print(i + " ");
+                } else if (i == row && j == seat) {
+                    System.out.print("B ");
+                }
+                else {
+                    System.out.print("S ");
+                }
+
+            }
+            System.out.println();
+        }
 
     }
 
@@ -101,7 +143,8 @@ public class Cinema {
     public static void main(String[] args) {
         Cinema cinema = new Cinema();
         cinema.printSeats();
-        cinema.calculateProfit();
+//        cinema.calculateProfit();
         cinema.setTicketPrice();
+        cinema.printReservedSeats();
     }
 }
