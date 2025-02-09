@@ -10,6 +10,7 @@ public class Cinema {
     private int allSeats;
     private int row;
     private int seat;
+    private char[][] seats;
 
     public int getAllRows() {
         return allRows;
@@ -23,15 +24,19 @@ public class Cinema {
         this.largeRoom = largeRoom;
     }
 
-    public void printSeats() {
+    public void askForSeatArrangement() {
         Scanner scan = new Scanner(in);
         System.out.println("Enter the number of rows:");
         allRows = scan.nextInt();
         System.out.println("Enter the number of seats in each row:");
         allSeats = scan.nextInt();
 
-        displaySeats(false);
-
+        seats = new char[allRows][allSeats];
+        for (int i = 0; i < allRows; i++) {
+            for (int j = 0; j < allSeats; j++) {
+                seats[i][j] = 'S';
+            }
+        }
     }
 
     public int calculateProfit() {
@@ -56,9 +61,6 @@ public class Cinema {
         return ticketPrice;
     }
 
-    public void printReservedSeats() {
-        displaySeats(true);
-    }
 
     public boolean checkForLargeRoom() {
         if ((allRows * allSeats) < 60) {
@@ -75,6 +77,14 @@ public class Cinema {
         row = scan.nextInt();
         System.out.println("Enter a seat number in that row: ");
         seat = scan.nextInt();
+
+
+        if (seats[row - 1][seat - 1] == 'B') {
+            System.out.println("That ticket has already been purchased!");
+            askForSeatInput();
+        } else {
+            seats[row - 1][seat - 1] = 'B';
+        }
     }
 
     public int calculateTicketPrice(int selectedRow) {
@@ -86,38 +96,50 @@ public class Cinema {
         return 10;
     }
 
-    public void displaySeats(boolean showReserved) {
+    public void displaySeats() {
         System.out.println("Cinema:");
-        for (int i = 0; i <= allSeats; i++) {
-            if (i == 0) {
-                System.out.print("  ");
-            } else {
-                System.out.print(i + " ");
-            }
+
+        System.out.print("  ");
+        for (int i = 1; i <= allSeats; i++) {
+            System.out.print(i + " ");
         }
         System.out.println();
 
-        for (int i = 1; i <= allRows; i++) {
-            for (int j = 0; j <= allSeats; j++) {
-                if (j == 0) {
-                    System.out.print(i + " ");
-                } else if (showReserved && i == row && j == seat) {
-                    System.out.print("B ");
-                } else {
-                    System.out.print("S ");
-                }
+        for (int i = 0; i < allRows; i++) {
+            System.out.print((i + 1) + " ");
+            for (int j = 0; j < allSeats; j++) {
+                System.out.print(seats[i][j] + " ");
             }
             System.out.println();
         }
         System.out.println();
+        menu();
     }
+
+    public void menu() {
+        Scanner scan = new Scanner(in);
+        System.out.println("1. Show the seats");
+        System.out.println("2. Buy a ticket");
+        System.out.println("0. Exit");
+        int userAnswer = scan.nextInt();
+
+        if (userAnswer == 1) {
+            displaySeats();
+        } else if (userAnswer == 2) {
+            setTicketPrice();
+            displaySeats();
+        }
+    }
+
 
 
     public static void main(String[] args) {
         Cinema cinema = new Cinema();
-        cinema.printSeats();
+        cinema.askForSeatArrangement();
+        cinema.menu();
+//        cinema.printSeats();
 //        cinema.calculateProfit();
-        cinema.setTicketPrice();
-        cinema.printReservedSeats();
+//        cinema.setTicketPrice();
+//        cinema.printReservedSeats();
     }
 }
