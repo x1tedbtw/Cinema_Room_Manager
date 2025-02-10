@@ -76,17 +76,26 @@ public class Cinema {
 
     public void askForSeatInput() {
         Scanner scan = new Scanner(in);
-        System.out.println("Enter a row number: ");
-        row = scan.nextInt();
-        System.out.println("Enter a seat number in that row: ");
-        seat = scan.nextInt();
+
+        while (true) {  // Infinite loop
+            System.out.println("Enter a row number: ");
+            row = scan.nextInt();
+            System.out.println("Enter a seat number in that row: ");
+            seat = scan.nextInt();
+
+            if (row < 1 || row > allRows || seat < 1 || seat > allSeats) {
+                System.out.println("Wrong input!");
+                continue;
+            }
 
 
-        if (seats[row - 1][seat - 1] == 'B') {
-            System.out.println("That ticket has already been purchased!");
-            askForSeatInput();
-        } else {
+            if (seats[row - 1][seat - 1] == 'B') {
+                System.out.println("That ticket has already been purchased!");
+                continue;  // Restart loop
+            }
+
             seats[row - 1][seat - 1] = 'B';
+            break;  // Exit the loop
         }
     }
 
